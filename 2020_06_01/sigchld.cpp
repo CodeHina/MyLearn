@@ -61,7 +61,19 @@ void do_sig_child(int sig)
     pid_t ret_pid = -1;
     int wstatus = -1;
 
-    if( (ret_pid = waitpid(0, &wstatus, WNOHANG)) > 0) //返回值为0/-1(无子进程返回/执行错误)
+
+    //这里利用if会出错 - 造成不能完全回收所有进程 - 产生僵尸进程
+    //Linux内核通过判断未决信号集来进行信号处理
+    //且在信号捕捉期间 - 有多个信号发送给进程 - 进程只记录一次(处理一次)
+    //即可能在此函数执行期间 - 有新的子进程几乎同时终止并给父进程发送SIGCHLD信号
+    //但是父进程只记录一次 - 就产生了僵尸进程
+    //所以将if改为while - 轮询的去回收僵尸进程
+    //例-同时2/3/4三个进程死亡 - 处理信号时先回收了2号进程 - 由于while存在又回收了已经死亡的3/4号进程
+    //但是信号捕捉函数只执行了一次
+    
+    std::cout << "----do_sig_child()-----" << std::endl;
+
+    while( (ret_pid = waitpid(0, &wstatus, WNOHANG)) > 0) //返回值为0/-1(无子进程返回/执行错误)
     {
         if( WIFEXITED(wstatus) )                //进程正常终止
             std::cout << "child " << getpid() << " exit with " << WEXITSTATUS(wstatus) << std::endl;//打印其退出值
