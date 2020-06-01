@@ -9,12 +9,12 @@
 int main()
 {
     char str[256] = "LiMing m 12,ZhangSan f 13,LiSi m 14"; 
-    int StrNums = 0;
-    int PerNums = 0;
-    char* outp = NULL;
-    char* inp  = NULL;
+    int StrNums = 0;    //总共分割的字符串数
+    int PerNums = 0;    //外循环分割出的人数
+    char* outp = NULL;  //外循环分割后的剩余字符串
+    char* inp  = NULL;  //内循环分割后的剩余字符串
     char* info = NULL;
-    char* pstr = str;
+    char* pstr = str;   //利用指针变量pstr来代替str操作
     char* sbuf[32];
 
     while( (info = strtok_r(pstr, ",", &outp) ) != NULL)
