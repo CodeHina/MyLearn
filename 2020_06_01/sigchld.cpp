@@ -8,6 +8,7 @@ void do_sig_child(int);
 #include <iostream>
 #include <csignal>
 #include <unistd.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 
 int main()
@@ -31,7 +32,13 @@ int main()
     }
     else if(cpid > 0) //当前进程为父进程
     {
-
+        //对要处理的信号进行阻塞 - 防止进行信号捕捉函数注册时已经有子进程死亡
+        sigset_t new_mask, old_mask;
+        sigemptyset(&new_mask);
+        sigaddset(&new_mask, SIGCHLD);
+        
+        sigprocmask(SIG_BLOCK, &new_mask, &old_mask);//注意返回值的处理    
+//--
         struct sigaction act, old_act;
 
         act.sa_handler = do_sig_child;
@@ -39,6 +46,9 @@ int main()
         sigemptyset(&act.sa_mask);
 
         sigaction(SIGCHLD, &act, &old_act); //注册信号捕捉函数
+//--
+        //信号捕捉函数注册完毕 - 解除对要处理信号的阻塞
+        sigprocmask(SIG_SETMASK, &old_mask, NULL);   //恢复到原来的状态 - 解除阻塞
 
         while(1)
         {
