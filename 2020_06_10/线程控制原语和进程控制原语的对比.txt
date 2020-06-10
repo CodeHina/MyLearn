@@ -1,0 +1,33 @@
+/-------------------------------------------------------------------/
+
+    1.进程创建 vs 线程创建
+        
+        pid_t fork(void);                   int pthread_create(pthread_t* thread, const pthread_attr_t* attr, 
+                                                               void*(*start_routine)(void*), void* arg);
+    
+    2.进程退出 vs 线程退出
+        
+        exit(-1);                           int pthread_exit(void*);
+        结束调用此函数的进程                此函数会将调用此函数的线程进程退出 - 不会结束创建线程的进程
+
+    3.进程回收 vs 线程回收
+        
+        pid_t wait(int* wstatus);           int pthread_join(pthread_t tid, void** retval);
+        阻塞回收进程 - 传出进程结束状态     阻塞回收线程 - 不能回收detached的线程
+
+    4.杀死进程 vs 杀死线程
+        
+        int kill(pid_t pid, int sig);       int pthread_cancel(pthread_t tid);
+        通过向进程发信号来杀死进程          杀死某个线程 - 线程中必须有取消点(一般为某个系统调用) - 或者自设取消点
+
+    5.其他
+        
+        pid_t getpid(void);                 pthread_self();
+        获取进程id                          获取当前线程id
+
+                                            int pthread_detach(pthread_t tid); 
+                                            将线程分离 - 线程结束后自动清理PCB - 无需调用pthread_join()
+
+
+
+
