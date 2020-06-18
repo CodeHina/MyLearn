@@ -1,5 +1,5 @@
 #include<iostream>
-
+#include <bits/c++config.h>
 
 using namespace std;
 

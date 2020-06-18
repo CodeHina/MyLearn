@@ -1,4 +1,4 @@
-#include <iostream>
+#include <iostream>::
 #include <unistd.h>
 #include <pthread.h>
 #include <cstring>
@@ -34,8 +34,6 @@ int main()
         if( ret != 0) 
         {
             //char* strerror(int errnum) / char* strerror_r(int errnum, char* buf, size_t buflen) - 线程安全的
-            char buf[128];
-            strerror_r(ret, buf, sizeof(buf));
             std::cerr << "pthread_create error : " << buf << std::endl;
             exit(-1);
         }
