@@ -1,0 +1,38 @@
+1.条件变量概念
+ 
+    本身不是锁，可以造成线程阻塞，通常与互斥锁配合，使得多线程会和
+
+2.函数
+
+    pthread_cond_init()
+    pthread_cond_destroy()
+    pthread_cond_wait() ****** 
+            
+        1.阻塞等待一个条件变量满足
+        2.释放已经掌握的互斥锁 - 相当于pthread_mutex_unlock(&mutex);
+    
+        且以上两步操作为原子操作
+
+        3.当被唤醒时,pthread_cond_wait()函数返回时 - 解除阻塞并重新申请获取互斥锁 - 相当于pthread_mutex_lock(&mutex);
+            
+    pthread_cond_timedwait() - 以某个时长进行阻塞
+
+    唤醒条件变量
+    pthread_cond_signal()    - 至少解除一个被指定条件变量阻塞的线程
+    pthread_cond_broadcast() - 解除当前所有被指定条件变量阻塞的线程的阻塞
+    
+
+3.生产者和消费者模型 - 利用条件变量
+    
+    比如
+        消费者等待条件变量满足 - 调用 pthread_cond_wait(&cond, &mutex);
+            阻塞等待cond满足 - 解锁mutex互斥锁 - 函数返回时即条件满足 - 获取互斥锁(加锁 - 能够访问加锁共享数据)
+        
+        而生产者pthread_cond_signal() - 唤醒条件变量(使得条件变量满足)
+
+    
+    
+
+
+
+
