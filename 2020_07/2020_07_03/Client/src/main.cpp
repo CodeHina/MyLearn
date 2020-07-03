@@ -4,15 +4,16 @@
 int main()
 {
 
-   Client c;
+    Client c;
    
 
-   c.SetConfig();
+    c.SetConfig();
 
 
-   c.Connect(); 
+    c.Connect(); 
 
-   c.handle();
+    while(1)
+        c.handle();
 
     return 0;
 }

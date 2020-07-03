@@ -54,8 +54,23 @@ void Client::handle()
 
     memset(buf, 0, sizeof(buf));
     strcpy(buf, "hello,server!");
+
+
 */
-    write(CommuSocket, "hello", strlen("hello"));
+    std::cout << "please input some information :\n";
+    char* msg = fgets(buf, sizeof(buf), stdin); //从标准输入读取数据
+    if(msg == NULL)
+        SysErr("fgets", -1);
+
+    SysErr("write", write(CommuSocket, msg, strlen(msg)) );
+
+    memset(buf, 0, sizeof(buf)); //清空缓冲区
+
+    SysErr("read", read(CommuSocket, buf, sizeof(buf)) );
+
+    std::cout << "read msg from " << SEVR_IP_ADDR << " is " << buf << std::endl;
+
+
 }
 
 Client::~Client()
