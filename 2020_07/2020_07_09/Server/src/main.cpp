@@ -67,12 +67,14 @@ int main()
             break;
         else//父线程 - 注册信号处理函数
         {
+            close(s.get_c_socket());    //关闭通信的套接字
             signal(SIGCHLD, wait_child);
         }
     }
 
     if(pid == 0)//子线程通信逻辑
     {
+        close(s.get_my_socket());       //关闭等待连接的套接字
         s.Handle();
     }
     
