@@ -97,8 +97,6 @@ int main()
                 if(i == OPEN_MAX)
                 { std::cerr << "too many client" << std::endl; exit(-1); }
 
-                std::cout << i << std::endl;
-
                 /* 更新新增的comuncate_fd相关信息 */
                 monitor_fds[i].fd = commucate_fd;
                 monitor_fds[i].events = POLLIN; //监听事件为读
@@ -118,7 +116,7 @@ int main()
                 if( (sockfd = monitor_fds[ifd].fd) == -1 ) //无效的文件描述符
                     continue;                              //考察下一个
 
-                if( monitor_fds[ifd].events & POLLIN)      //当前事件为可读
+                if( monitor_fds[ifd].revents & POLLIN)      //当前事件为可读
                 {
                     char buf[BUFSIZ];
                     size_t rdbytes;
